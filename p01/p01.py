@@ -52,3 +52,6 @@ print(media(list(bmi_col.values())[0]))
 #media mediana y moda percentiles
 
 
+
+
+
