@@ -1,6 +1,6 @@
 Forma alternativa de generar una copia mas reducida (subsample)del dataset
 
-
+el archivo p05.py contiene la respuesta.
 
 How To Create Small Random Sample From Large CSV File.
 
