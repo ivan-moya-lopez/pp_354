@@ -1,3 +1,7 @@
+Forma alternativa de generar una copia mas reducida (subsample)del dataset
+
+el archivo p05.py contiene la respuesta.
+
 How To Create Small Random Sample From Large CSV File.
 
 subsample is a command line tool built with Python. As long as you have pip installed, you can use the following:
