@@ -1,57 +1,147 @@
 import csv
 from collections import Counter
 
+
 #
-def media (lista):
-    print(lista)
+def media(lista):
     sumar = list(map(lambda x: round(float(x), 2), lista))
-    return sum(sumar) /len(lista)
+    imprimir("Media", sum(sumar) / len(lista))
 
-#
-with open('../diabetes_sub_sample1500x17.csv',newline='') as csvfile:
-    lector_archivo= csv.DictReader(csvfile)
-    type_col={'Type':[]}
-    hbp_col = {'HighBP':[]}
-    bmi_col = {'BMI':[]}
-#
-#
+
+def imprimir(texto, valor):
+    print('{} {}'.format(texto, valor))
+
+
+def moda(datos):
+    repeticiones = 0
+    for i in datos:
+        n = datos.count(i)
+        if n > repeticiones:
+            repeticiones = n
+    moda = []
+    for i in datos:
+        n = datos.count(i)
+        if n == repeticiones and i not in moda:
+            moda.append(i)
+    if len(moda) != len(datos):
+        imprimir('Moda: ', moda)
+    else:
+        print('No hay moda')
+
+
+import math
+
+
+def percentile(data, perc: int):
+    size = len(data)
+    return sorted(data)[int(math.ceil((size * perc) / 100)) - 1]
+
+
+with open('../heart_data_subsample.csv', newline='') as csvfile:
+    lector_archivo = csv.DictReader(csvfile)
+    edad_col = []
+    genero_col = []
+    altura_col = []
+    peso_col = []
+    sisto_col = []
+    asist_col = []
+    colest_col = []
+    glucos_col = []
+    con_tab_col = []
+    con_alc_col = []
+    act_fis_col = []
+    result_col = []
+    ## index,id,age,gender,height,weight,ap_hi,ap_lo,cholesterol,gluc,smoke,alco,active,cardio
     for fila in lector_archivo:
-        type_col['Type'].append(fila['Diabetes_012'])
-        hbp_col['HighBP'].append(fila['HighBP'])
-        bmi_col['BMI'].append(fila['BMI'])
+        edad_col.append(fila['age'])
+        genero_col.append(fila['gender'])
+        altura_col.append(fila['height'])
+        peso_col.append(fila['weight'])
+        sisto_col.append(fila['ap_hi'])
+        asist_col.append(fila['ap_lo'])
+        colest_col.append(fila['cholesterol'])
+        glucos_col.append(fila['gluc'])
+        con_tab_col.append(fila['smoke'])
+        con_alc_col.append(fila['alco'])
+        act_fis_col.append(fila['active'])
+        result_col.append(fila['cardio'])
+####
+print("Estadisticas por columna sin librerias.\n")
+print("\tColumna Edad en dias:")
+media(edad_col)
+moda(edad_col)
+print("Q1 :" + percentile(edad_col, 25) + ", Q2 :" + percentile(edad_col, 50) + ", Q3 :" + percentile(edad_col, 75))
+print("P10 :" + percentile(edad_col, 10) + ", P20 :" + percentile(edad_col, 20) + ", P90 :" + percentile(edad_col, 90))
 
-type_list=list(type_col.values())
-res_type=Counter(type_list[0])
+print("\tColumna Genero: 2=Hombre,1=Mujer.")
+moda(genero_col)
+print(" ", Counter(genero_col))
 
+print("\tColumna Altura en centimetros:")
+media(altura_col)
+moda(altura_col)
+print(
+    "Q1 :" + percentile(altura_col, 25) + ", Q2 :" + percentile(altura_col, 50) + ", Q3 :" + percentile(altura_col, 75))
+print(
+    "P2 :" + percentile(altura_col, 2) + ", P5 :" + percentile(altura_col, 5) + ", P30 :" + percentile(altura_col, 30))
 
-high_b_p_list= list(hbp_col.values())
-res_hbp=Counter(high_b_p_list[0])
+print("\tColumna Peso en Kg:")
+media(peso_col)
+moda(peso_col)
+print("Q1 :" + percentile(peso_col, 25) + ", Q2 :" + percentile(peso_col, 50) + ", Q3 :" + percentile(peso_col, 75))
+print("P5 :" + percentile(peso_col, 5) + ", P15 :" + percentile(peso_col, 15) + ", P40 :" + percentile(peso_col, 40))
 
-#0 = no diabetes 1 = prediabetes 2 = diabetes
-print(res_type)
-#0 = no high BP 1 = high BP
-print(res_hbp)
-#0 = no high cholesterol 1 = high cholesterol
-#Body Mass Index
+print("\tColumna Presion Sistolica:")
+media(sisto_col)
+moda(sisto_col)
+print("Q1 :" + percentile(sisto_col, 25) + ", Q2 :" + percentile(sisto_col, 50) + ", Q3 :" + percentile(sisto_col, 75))
+print("P9 :" + percentile(sisto_col, 9) + ", P18 :" + percentile(sisto_col, 18) + ", P45 :" + percentile(sisto_col, 45))
 
-print(media(list(bmi_col.values())[0]))
-#media mediana y moda percentiles
+print("\tColumna Presion Asistolica:")
+media(asist_col)
+moda(asist_col)
+print("Q1 :" + percentile(asist_col, 25) + ", Q2 :" + percentile(asist_col, 50) + ", Q3 :" + percentile(asist_col, 75))
+print("P3 :" + percentile(asist_col, 3) + ", P21 :" + percentile(asist_col, 21) + ", P51 :" + percentile(asist_col, 51))
 
-#Stroke (Ever told) you had a stroke. 0 = no 1 = yes
-#physical activity in past 30 days - not including job 0 = no 1 = yes
-#Heavy drinkers (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week) 0 = no 1 = yes
-#Would you say that in general your health is: scale 1-5 1 = excellent 2 = very good 3 = good 4 = fair 5 = poor
-#Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good? scale 1-30 days
-#Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good? scale 1-30 days
-#Do you have serious difficulty walking or climbing stairs? 0 = no 1 = yes
-#0 = female 1 = male
-#13-level age category (_AGEG5YR see codebook) 1 = 18-24 9 = 60-64 13 = 80 or older
-#media mediana y moda percentiles
-#Education level (EDUCA see codebook) scale 1-6 1 = Never attended school or only kindergarten 2 = Grades 1 through 8 (Elementary) 3 = Grades 9 through 11 (Some high school) 4 = Grade 12 or GED (High school graduate) 5 = College 1 year to 3 years (Some college or technical school) 6 = College 4 years or more (College graduate)
-#Income scale (INCOME2 see codebook) scale 1-8 1 = less than $10,000 5 = less than $35,000 8 = $75,000 or more
-#media mediana y moda percentiles
+print("\tColumna Colesterol:")
+moda(colest_col)
+print(" ", Counter(colest_col))
 
+print("\tColumna Glucosa :")
+moda(glucos_col)
+print(" ", Counter(glucos_col))
 
+print("\tColumna Fumador 0 No, 1 Si.")
+moda(con_tab_col)
+print(" ", Counter(con_tab_col))
 
+print("\tColumna Consumo de Alcohol 0 No, 1 Si.")
+moda(con_alc_col)
+print(" ", Counter(con_tab_col))
+
+print("\tColumna Actividad fisica 0 No, 1 Si.")
+moda(act_fis_col)
+print(" ", Counter(act_fis_col))
+
+print("\tColumna Resultado Enfermedad Cardiovacular 0 No, 1 Si.")
+moda(result_col)
+print(" ", Counter(result_col))
+
+import numpy as np
+import pandas as pd
+
+dataset = pd.read_csv("../heart_data_subsample.csv")
+dataset.describe()
+print("Estadisticas por columna con numpy y pandas.\n")
+
+print("Columna Edad: \n", dataset['age'].describe())
+print("Columna Altura: \n", dataset.groupby('gender').height.describe())
+print("Columna Peso: \n", dataset['weight'].describe())
+print("Columna Sistolica: \n", dataset['ap_hi'].describe())
+print("Columna Asistolica: \n", dataset['ap_lo'].describe())
+
+print("Graficos por columnas.\n")
+dataset.height.plot()
+print("Fin.\n")
 
 
